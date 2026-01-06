@@ -1,0 +1,89 @@
+@model GoogleCalendarIntegration.Models.CalendarEvent
+
+@{
+    ViewData["Title"] = "Create New Event";
+    Layout = "_CalendarLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Create New Event</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Summary" class="control-label">Event Title*</label>
+                        <input asp-for="Summary" class="form-control" required />
+                        <span asp-validation-for="Summary" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Start" class="control-label">Start Date & Time*</label>
+                            <input asp-for="Start" type="datetime-local" class="form-control" required />
+                            <span asp-validation-for="Start" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="End" class="control-label">End Date & Time*</label>
+                            <input asp-for="End" type="datetime-local" class="form-control" required />
+                            <span asp-validation-for="End" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Location" class="control-label">Location</label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="CalendarId" class="control-label">Calendar</label>
+                        <select asp-for="CalendarId" class="form-control">
+                            <option value="primary">Primary Calendar</option>
+                            <!-- Add more calendar options here if needed -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group d-flex justify-content-between">
+                        <a href="/Calendar" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="far fa-save"></i> Create Event
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Set default time to next hour
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
+            
+            // Format as YYYY-MM-DDThh:mm
+            const formatDateTime = (date) => {
+                return date.toISOString().slice(0, 16);
+            };
+            
+            document.getElementById('Start').value = formatDateTime(nextHour);
+            document.getElementById('End').value = formatDateTime(new Date(nextHour.getTime() + 60 * 60 * 1000));
+        });
+    </script>
+}
